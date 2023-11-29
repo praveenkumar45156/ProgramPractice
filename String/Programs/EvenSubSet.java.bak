@@ -1,0 +1,89 @@
+import java.util.*;
+
+class EvenSubSet 
+{
+	public static int count=0;
+	public static int count2=0;
+	public static void evenSubSetUsingString(String word,  String ans)
+	{
+		if(word.length() == 0)
+		{
+			if(ans != ""){				
+				String set="{";
+				char[] chArr = ans.toCharArray();
+				int sum = 0;
+				for(int i=0;i<chArr.length;i++){
+					sum = sum + Integer.parseInt(String.valueOf(chArr[i]));
+					set = set + Integer.parseInt(String.valueOf(chArr[i])) +",";
+				}
+				if(sum %2 == 0){
+					count++;
+				}
+				set = set.substring(0,set.length()-1) + "}";
+				System.out.print(set);
+			}else{
+				System.out.print("{}");
+			}
+			return;
+		}
+		evenSubSetUsingString(word.substring(1),ans+word.charAt(0));
+		evenSubSetUsingString(word.substring(1),ans);
+	}
+
+	public static void evenSubSetUsingArray(int[] set, int index, ArrayList<Integer> currentSubset, ArrayList<ArrayList<Integer>> subsets)
+	{	
+		//System.out.println("Include index: "+index);
+		if (index == set.length) {
+            subsets.add(new ArrayList<Integer>(currentSubset));
+			/*int sum = 0;
+			for(Integer value: currentSubset){
+				sum = sum+ value;
+			}
+			if(sum %2 == 0 && sum !=0){
+				count2++;
+			}*/
+            return;
+        }
+
+        // Include the current element
+		currentSubset.add(set[index]);
+		//System.out.println("Include currentSubset: "+currentSubset);
+		//System.out.println("Include subsets: "+subsets);        
+        evenSubSetUsingArray(set, index + 1, currentSubset, subsets);
+
+        // Exclude the current element
+		currentSubset.remove(currentSubset.size() - 1);
+		//System.out.println("Exclude currentSubset: "+currentSubset);
+		//System.out.println("Exclude subsets: "+subsets);        
+        evenSubSetUsingArray(set, index + 1, currentSubset, subsets);
+	}
+
+	public static void main(String[] args) 
+	{
+		System.out.println("Enter Word");
+		Scanner scanner = new Scanner(System.in);
+		String word = scanner.nextLine();
+
+		System.out.print("[");
+		evenSubSetUsingString(word,"");
+		System.out.println("]");
+		System.out.println("Even SubSet: "+EvenSubSet.count);
+
+		System.out.println("Enter the Length of the array:");
+		int n = scanner.nextInt();
+		int[] arr = new int[n];
+		for(int i=1;i<=n;i++){
+			System.out.println("Enter "+i+" value: ");
+			arr[i-1] = scanner.nextInt();
+		}
+		
+		ArrayList<ArrayList<Integer>> subsets = new ArrayList<ArrayList<Integer>>();
+		ArrayList<Integer> subset = new ArrayList<Integer>();
+        evenSubSetUsingArray(arr, 0, subset, subsets);
+		System.out.println(subsets);
+		//System.out.println("Even SubSet: "+EvenSubSet.count2);
+
+		
+
+	}
+}
